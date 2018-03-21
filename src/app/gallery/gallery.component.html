@@ -1,0 +1,30 @@
+<div class="image-wrapper">
+  <ng-container
+    *ngIf="localImages[selectedIndex] && localImages[selectedIndex].status !== 'failed'; else default"
+    [ngSwitch]="localImages[selectedIndex].status" class="image-wrapper"
+  >
+    <img
+      *ngSwitchCase="'success'"
+      @image
+      [src]="localImages[selectedIndex].src"
+      [alt]="localImages[selectedIndex].alt"
+    >
+    <img
+      *ngSwitchCase="'loading'"
+      @image
+      src="https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/VCHXZQKsxil3lhgr4/animation-loading-circle-icon-on-white-background-with-alpha-channel-4k-video_sjujffkcde_thumbnail-full01.png"
+      [alt]="localImages[selectedIndex].alt"
+    >
+  </ng-container>
+  <ng-template #default>
+    <img
+      [src]="defaultImage"
+      @image
+      [alt]="localImages[selectedIndex].alt"
+    >
+  </ng-template>
+</div>
+<div class="arrow-wrapper" *ngIf="localImages.length > 1">
+  <button (click)="updateSelectedIndex(false)">prev</button>
+  <button (click)="updateSelectedIndex(true)">next</button>
+</div>

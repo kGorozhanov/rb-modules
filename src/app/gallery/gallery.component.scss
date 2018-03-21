@@ -1,0 +1,15 @@
+.image-wrapper {
+  width: 400px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+img {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: 100%;
+  transition: opacify .3s ease-out;
+}
