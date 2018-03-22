@@ -1,30 +1,25 @@
-<div class="image-wrapper">
-  <ng-container
-    *ngIf="localImages[selectedIndex] && localImages[selectedIndex].status !== 'failed'; else default"
-    [ngSwitch]="localImages[selectedIndex].status" class="image-wrapper"
+<div class="gallery-image-wrapper">
+  <div
+    class="gallery-image"
+    *ngIf="localImages.length"
+    [class.load-failed]="
+      localImages[selectedIndex].status === 'loading' ?
+        localImages[prevSelectedIndex].status === 'failed' :
+        localImages[selectedIndex].status === 'failed'
+    "
   >
     <img
-      *ngSwitchCase="'success'"
-      @image
-      [src]="localImages[selectedIndex].src"
+      [src]="localImages[selectedIndex].status === 'loading' ? localImages[prevSelectedIndex].src : localImages[selectedIndex].src"
       [alt]="localImages[selectedIndex].alt"
     >
-    <img
-      *ngSwitchCase="'loading'"
-      @image
-      src="https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/VCHXZQKsxil3lhgr4/animation-loading-circle-icon-on-white-background-with-alpha-channel-4k-video_sjujffkcde_thumbnail-full01.png"
-      [alt]="localImages[selectedIndex].alt"
-    >
-  </ng-container>
-  <ng-template #default>
-    <img
-      [src]="defaultImage"
-      @image
-      [alt]="localImages[selectedIndex].alt"
-    >
-  </ng-template>
-</div>
-<div class="arrow-wrapper" *ngIf="localImages.length > 1">
-  <button (click)="updateSelectedIndex(false)">prev</button>
-  <button (click)="updateSelectedIndex(true)">next</button>
+  </div>
+  <div
+    class="gallery-loader"
+    *ngIf="localImages[selectedIndex]"
+    [class.active]="localImages[selectedIndex].status === 'loading'"
+  ></div>
+  <div class="gallery-arrows" *ngIf="localImages.length > 1">
+    <div class="gallery-arrow gallery-arrow-left" (click)="updateSelectedIndex(false, $event)"></div>
+    <div class="gallery-arrow gallery-arrow-right" (click)="updateSelectedIndex(true, $event)"></div>
+  </div>
 </div>

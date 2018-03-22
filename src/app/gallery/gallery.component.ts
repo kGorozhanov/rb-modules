@@ -1,23 +1,13 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, PLATFORM_ID} from '@angular/core';
 import {GalleryImage, ImageLoadStatus, LocalGalleryImage} from './models/gallery-image.model';
-import {loadImage} from './utils/image-loader';
 import {isPlatformServer} from '@angular/common';
-import {animate, style, transition, trigger} from '@angular/animations';
+import {ImageLoadService} from './services/image-load.service';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('image', [
-      transition('* => void', animate(300, style({opacity: 0}))),
-      transition('void => *', [
-        style({opacity: 0}),
-        animate(300, style({opacity: 1}))
-      ])
-    ])
-  ]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GalleryComponent {
   localImages: LocalGalleryImage[];
@@ -32,13 +22,14 @@ export class GalleryComponent {
   }
 
   selectedIndex: number;
+  prevSelectedIndex: number;
   @Input() defaultImage: string;
 
   @Input()
   set images(value: GalleryImage[]) {
     this.localImages = value;
     this.selectedIndex = 0;
-    this.changeDetectorRef.markForCheck();
+    this.prevSelectedIndex = 0;
     if (!this.localImages[this.selectedIndex]) {
       return;
     }
@@ -49,11 +40,16 @@ export class GalleryComponent {
     }
   }
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId) {
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+              private imageLoadService: ImageLoadService,
+              @Inject(PLATFORM_ID) platformId) {
     this.isServer = isPlatformServer(platformId);
   }
 
-  updateSelectedIndex(next: boolean) {
+  updateSelectedIndex(next: boolean, event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.prevSelectedIndex = this.selectedIndex;
     this.selectedIndex = next ? this.nextIndex : this.prevIndex;
     this.changeDetectorRef.markForCheck();
     this.loadNextImages();
@@ -71,7 +67,7 @@ export class GalleryComponent {
       .filter(i => !this.localImages[i].status)
       .forEach(i => {
         this.updateImageLoadStatus(i, 'loading');
-        loadImage(this.localImages[i])
+        this.imageLoadService.load(this.localImages[i].src)
           .then(() => this.updateImageLoadStatus(i, 'success'))
           .catch(() => this.updateImageLoadStatus(i, 'failed'));
       });
