@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {ImageStackItem} from '../models/image-stack-item.model';
+import {isPlatformBrowser} from '@angular/common';
 
 const noop = () => {
 };
@@ -14,8 +15,10 @@ export class ImageLoadService {
     return this.loaders.find(loader => !loader.working);
   }
 
-  constructor() {
-    this.createLoaders(10);
+  constructor(@Inject(PLATFORM_ID) platformId) {
+    if (isPlatformBrowser(platformId)) {
+      this.createLoaders(10);
+    }
   }
 
   load(src: string): Promise<boolean> {

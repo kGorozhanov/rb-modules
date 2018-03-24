@@ -16,7 +16,7 @@
   <div
     class="gallery-loader"
     *ngIf="localImages[selectedIndex]"
-    [class.active]="localImages[selectedIndex].status === 'loading'"
+    [class.active]="localImages[selectedIndex].status === 'loading' && selectedIndex !== prevSelectedIndex"
   ></div>
   <div class="gallery-arrows" *ngIf="localImages.length > 1">
     <div class="gallery-arrow gallery-arrow-left" (click)="updateSelectedIndex(false, $event)"></div>
