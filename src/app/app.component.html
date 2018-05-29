@@ -1,3 +1,13 @@
-<div *ngFor="let i of galer">
-  <app-gallery [images]="images" defaultImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMaEKYcNWeqxR6z5J6doHRiwDaIxgj388R0PETzyf_GJX4JRCI"></app-gallery>
-</div>
+<button (click)="add()">add</button>
+<ul [appRbSortableList]="items" (sortChanged)="onSortChanged($event)">
+  <li
+    *ngFor="let item of items; let i = index"
+    #sortableItem
+    draggable="true"
+  >
+    <span>{{item}}</span>
+  </li>
+  <li #dropItem>
+    <span>drop item</span>
+  </li>
+</ul>

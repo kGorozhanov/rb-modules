@@ -1,9 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
 
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 import {GalleryModule} from './gallery/gallery.module';
+import {RbSortableListModule} from './rb-sortable-list/rb-sortable-list.module';
 
 
 @NgModule({
@@ -12,9 +13,11 @@ import {GalleryModule} from './gallery/gallery.module';
   ],
   imports: [
     BrowserModule,
-    GalleryModule
+    GalleryModule,
+    RbSortableListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
